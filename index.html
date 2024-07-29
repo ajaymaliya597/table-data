@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD in JS</title>
+    <link rel="shortcut icon" href="./database.png" type="image/x-icon">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+     <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+    overflow: hidden;
+    margin-bottom: 5vh;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 50px;
+}
+
+form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+form input, form select, form button {
+    flex: 1 1 calc(50% - 20px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form input[type="radio"] {
+    flex: 0 1 auto;
+}
+
+form .gender {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content:flex-start;
+    margin: 10px 0;
+}
+
+form button {
+    background-color: #0059ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #003cd5;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+.actions {
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    form input, form select, form button {
+        flex: 1 1 100%;
+    }
+
+    form .gender {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    form .gender label {
+        margin-left: 10px;
+    }
+
+    th, td {
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    form input, form select, form button {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    th, td {
+        font-size: 14px;
+    }
+
+    .actions button {
+        font-size: 12px;
+    }
+}
+
+     </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CRUD in JS</h1>
+        <form id="crud-form">
+            <input type="text" id="name" placeholder="Enter your name" required>
+            <input type="number" id="age" placeholder="Enter your age" required>
+            <input type="text" id="phone" placeholder="Enter your phone" required>
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <div class="gender">
+                <input type="radio" id="male" name="gender" value="male">
+                <label for="male">Male</label>
+                <input type="radio" id="female" name="gender" value="female">
+                <label for="female">Female</label>
+                <input type="radio" id="other" name="gender" value="other">
+                <label for="other">Other</label>
+            </div>
+            <select id="hometown" required>
+                <option value="" disabled selected>Select Hometown</option>
+                <option value="Ajmer">Ajmer</option>
+                <option value="Jaipur">Jaipur</option>
+                <option value="Udaipur">Udaipur</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+        <table id="crud-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Hometown</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Appended Data -->
+            </tbody>
+        </table>
+    </div>
+    <!-- <script src="script.js"></script> -->
+     <script>
+        document.getElementById('crud-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const name = document.getElementById('name').value;
+    const age = document.getElementById('age').value;
+    const phone = document.getElementById('phone').value;
+    const email = document.getElementById('email').value;
+    const gender = document.querySelector('input[name="gender"]:checked').value;
+    const hometown = document.getElementById('hometown').value;
+    addRow(name, age, phone, email, gender, hometown,rheta_kha_hai);
+    clearForm();
+});
+
+function addRow(name, age, phone, email, gender, hometown,) {
+    const table = document.getElementById('crud-table').getElementsByTagName('tbody')[0];
+    const rowCount = table.rows.length;
+    const row = table.insertRow(rowCount);
+    row.insertCell(0).innerHTML = rowCount + 1;
+    row.insertCell(1).innerHTML = name;
+    row.insertCell(2).innerHTML = age;
+    row.insertCell(3).innerHTML = phone;
+    row.insertCell(4).innerHTML = email;
+    row.insertCell(5).innerHTML = gender;
+    row.insertCell(6).innerHTML = hometown;
+    row.insertCell(7).innerHTML = `<button onclick="editRow(this)">✏️</button> <button onclick="deleteRow(this)">🗑️</button>`;
+}
+
+function clearForm(){
+    document.getElementById('crud-form').reset();
+}
+
+function editRow(button) {
+    const row = button.parentElement.parentElement;
+    document.getElementById('name').value = row.cells[1].innerHTML;
+    document.getElementById('age').value = row.cells[2].innerHTML;
+    document.getElementById('phone').value = row.cells[3].innerHTML;
+    document.getElementById('email').value = row.cells[4].innerHTML;
+    const gender = row.cells[5].innerHTML;
+    document.querySelector(`input[name="gender"][value="${gender}"]`).checked = true;
+    document.getElementById('hometown').value = row.cells[6].innerHTML;
+    deleteRow(button);
+}
+
+function deleteRow(button) {
+    const row = button.parentElement.parentElement;
+    row.parentNode.removeChild(row);
+    updateRowNumbers();
+}
+
+function updateRowNumbers() {
+    const table = document.getElementById('crud-table').getElementsByTagName('tbody')[0];
+    for (let i = 0; i < table.rows.length; i++) {
+        table.rows[i].cells[0].innerHTML = i + 1;
+    }
+}
+
+     </script>
+</body>
+</html>
